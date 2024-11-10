@@ -7,11 +7,12 @@ import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import MenuItems from "./menu-items";
+import Spinner from "@/components/ui/spinner";
+import { IUsersStore, usersStore } from "@/store/users-store";
 
 function LayoutProvider({ children }: { children: React.ReactNode }) {
-  const [currentUserData, setCurrentUserData] = React.useState<IUser | null>(
-    null
-  );
+  const { loggedInUserData, setLoggedInUserData }: IUsersStore =
+    usersStore() as any;
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [showMenuItems, setShowMenuItems] = React.useState<boolean>(false);
@@ -22,7 +23,7 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       const response = await saveCurrentUserToMongoDB();
       if (response.success) {
-        setCurrentUserData(response.data);
+        setLoggedInUserData(response.data as IUser);
       } else {
         setError(response.message);
       }
@@ -43,7 +44,11 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
   }
 
   if (loading) {
-    return <div className="flex justify-center items-center">Loading....</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner />
+      </div>
+    );
   }
 
   if (error) {
@@ -57,7 +62,7 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
 
         <div className="flex gap-5 items-center">
           <span className="text-sm font-semibold text-white uppercase">
-            {currentUserData?.name}
+            {loggedInUserData?.name}
           </span>
 
           <Button

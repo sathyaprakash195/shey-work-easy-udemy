@@ -22,6 +22,7 @@ function MenuItems({ showMenuItems, setShowMenuItems }: MenuItemsProps) {
       setLoading(true);
       await signOut();
       message.success("Signed out successfully");
+      setShowMenuItems(false);
     } catch (error: any) {
       message.error(error.message);
     } finally {
