@@ -73,7 +73,7 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
           ></Button>
         </div>
       </div>
-      {children}
+      <div className="p-5">{children}</div>
 
       {showMenuItems && (
         <MenuItems

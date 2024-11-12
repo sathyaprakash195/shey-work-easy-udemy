@@ -30,3 +30,11 @@ input {
   box-shadow: none !important;
   color: white !important;
 }
+
+.ant-form-item-label {
+  padding: 0 !important;
+}
+
+.ant-form-item {
+  margin-bottom: 0 !important;
+}
