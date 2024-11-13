@@ -13,6 +13,26 @@ function ProjectBasicInfo({
     { label: "Inactive", value: "inactive" },
   ];
 
+  let selectedLogoFile: any[] = [];
+
+  if (projectLogo && typeof projectLogo === "object") {
+    selectedLogoFile = [{
+      ...projectLogo,
+      url : URL.createObjectURL(projectLogo)
+    }];
+  }
+
+  if (projectLogo && typeof projectLogo === "string") {
+    selectedLogoFile = [
+      {
+        uid: "-1",
+        name: "logo",
+        status: "done",
+        url: projectLogo,
+      },
+    ];
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <Form.Item
@@ -52,8 +72,12 @@ function ProjectBasicInfo({
             return false;
           }}
           listType="picture-card"
+          fileList={selectedLogoFile}
+          multiple={false}
         >
-          <div className="span text-xs text-gray-500">Upload logo</div>
+          <div className="span text-xs text-gray-500">
+            {selectedLogoFile.length > 0 ? "Change" : "Upload"} Logo
+          </div>
         </Upload>
       </Form.Item>
     </div>

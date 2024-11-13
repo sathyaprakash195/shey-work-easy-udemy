@@ -1,4 +1,5 @@
 export interface IUser {
+  _id : string;
   name: string;
   email: string;
   clerkUserId: string;
@@ -11,6 +12,7 @@ export interface IUser {
 }
 
 export interface IProject {
+  _id : string;
   name: string;
   description: string;
   status: string;

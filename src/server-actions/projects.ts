@@ -4,10 +4,12 @@ import { IProject } from "@/interfaces";
 import ProjectModel from "@/models/project-model";
 import UserModel from "@/models/user-model";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export const createNewProject = async (payload: Partial<IProject>) => {
   try {
     await ProjectModel.create(payload);
+    revalidatePath("/account/projects");
     return {
       success: true,
       message: "Project created successfully",
@@ -29,6 +31,7 @@ export const updateProjectById = async ({
 }) => {
   try {
     await ProjectModel.findByIdAndUpdate(projectId, payload);
+    revalidatePath("/account/projects");
     return {
       success: true,
       message: "Project updated successfully",
@@ -44,6 +47,7 @@ export const updateProjectById = async ({
 export const deleteProjectById = async (projectId: string) => {
   try {
     await ProjectModel.findByIdAndDelete(projectId);
+    revalidatePath("/account/projects");
     return {
       success: true,
       message: "Project deleted successfully",

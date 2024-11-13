@@ -17,6 +17,8 @@ function Theme({ children }: { children: React.ReactNode }) {
           },
           Button: {
             controlHeight: 40,
+            defaultBg : '#DDDDDD',
+            defaultActiveBg: '#DDDDDD',
           },
           Select: {
             controlHeight: 45,
