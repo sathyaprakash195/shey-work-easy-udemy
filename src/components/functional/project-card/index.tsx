@@ -5,11 +5,14 @@ import { Trash2, Edit2, Eye } from "lucide-react";
 import { Alert, Button, message, Modal } from "antd";
 import { useRouter } from "next/navigation";
 import { deleteProjectById } from "@/server-actions/projects";
+import { IUsersStore, usersStore } from "@/store/users-store";
+import { hasPermission } from "@/helpers/permissions";
 
 function ProjectCard({ project }: { project: IProject }) {
   const [loading, setLoading] = React.useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = React.useState(false);
   const router = useRouter();
+  const { loggedInUserData }: IUsersStore = usersStore() as any;
 
   const deleteProjectHandler = async () => {
     try {
@@ -40,22 +43,34 @@ function ProjectCard({ project }: { project: IProject }) {
           <Eye size={16} />
         </Button>
 
-        <Button
-          size="small"
-          onClick={() => router.push(`/account/projects/edit/${project._id}`)}
-        >
-          <Edit2 size={16} />
-        </Button>
+        {hasPermission({
+          project,
+          user: loggedInUserData!,
+          permission: "edit-project",
+        }) && (
+          <Button
+            size="small"
+            onClick={() => router.push(`/account/projects/edit/${project._id}`)}
+          >
+            <Edit2 size={16} />
+          </Button>
+        )}
 
-        <Button
-          size="small"
-          onClick={() => {
-            setShowDeleteAlert(true);
-          }}
-          loading={loading}
-        >
-          <Trash2 size={16} />
-        </Button>
+        {hasPermission({
+          project,
+          user: loggedInUserData!,
+          permission: "delete-project",
+        }) && (
+          <Button
+            size="small"
+            onClick={() => {
+              setShowDeleteAlert(true);
+            }}
+            loading={loading}
+          >
+            <Trash2 size={16} />
+          </Button>
+        )}
       </div>
 
       {showDeleteAlert && (

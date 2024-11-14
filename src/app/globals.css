@@ -38,3 +38,8 @@ input {
 .ant-form-item {
   margin-bottom: 0 !important;
 }
+
+table {
+  margin-top: 20px;
+  border: 1px solid #b1b1b1;
+}

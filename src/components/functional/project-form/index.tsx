@@ -23,6 +23,9 @@ function ProjectForm({ formType, initialValues }: ProjectFormProps) {
   const [taskStatuses, setTaskStatuses] = React.useState<string[]>(
     initialValues?.taskStatuses || []
   );
+  const [teamMembers = [], setTeamMembers] = React.useState<any[]>(
+    initialValues?.teamMembers || []
+  );
   const [roles, setRoles] = React.useState<string[]>(
     initialValues?.roles || []
   );
@@ -91,23 +94,32 @@ function ProjectForm({ formType, initialValues }: ProjectFormProps) {
               setRoles={setRoles}
             />
           </TabPane>
-          <TabPane tab="Team Members" key="team-members">
-            <ProjectTeamMembers />
-          </TabPane>
+
+          {formType === "edit" && (
+            <TabPane tab="Team Members" key="team-members">
+              <ProjectTeamMembers
+                teamMembers={teamMembers}
+                setTeamMembers={setTeamMembers}
+                roles={roles}
+              />
+            </TabPane>
+          )}
         </Tabs>
 
-        <div className="flex justify-end gap-5">
-          <Button
-            onClick={() => {
-              router.push("/account/projects");
-            }}
-          >
-            Cancel
-          </Button>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            {formType === "create" ? "Create Project" : "Update Project"}
-          </Button>
-        </div>
+        {activeTab !== "team-members" && (
+          <div className="flex justify-end gap-5">
+            <Button
+              onClick={() => {
+                router.push("/account/projects");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {formType === "create" ? "Create Project" : "Update Project"}
+            </Button>
+          </div>
+        )}
       </Form>
     </div>
   );
