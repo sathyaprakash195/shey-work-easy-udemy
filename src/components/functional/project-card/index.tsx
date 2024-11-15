@@ -39,7 +39,10 @@ function ProjectCard({ project }: { project: IProject }) {
       </div>
 
       <div className="flex justify-end gap-5 mt-2">
-        <Button size="small">
+        <Button
+          size="small"
+          onClick={() => router.push(`/account/projects/${project._id}`)}
+        >
           <Eye size={16} />
         </Button>
 

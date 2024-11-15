@@ -14,6 +14,7 @@ function Theme({ children }: { children: React.ReactNode }) {
         components: {
           Input: {
             controlHeight: 45,
+            colorBorder: "#8a8a8a",
           },
           Button: {
             controlHeight: 40,
@@ -22,6 +23,7 @@ function Theme({ children }: { children: React.ReactNode }) {
           },
           Select: {
             controlHeight: 45,
+            colorBorder: "#8a8a8a",
           },
         },
       }}

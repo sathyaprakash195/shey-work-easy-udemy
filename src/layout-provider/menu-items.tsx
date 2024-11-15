@@ -64,7 +64,10 @@ function MenuItems({ showMenuItems, setShowMenuItems }: MenuItemsProps) {
                 ? "border-gray-500 p-2 border bg-gray-200 rounded-sm"
                 : "p-2"
             }`}
-            onClick={() => router.push(item.path)}
+            onClick={() => {
+              router.push(item.path);
+              setShowMenuItems(false);
+            }}
           >
             {item.icon}
             <span className="text-sm">{item.label}</span>
