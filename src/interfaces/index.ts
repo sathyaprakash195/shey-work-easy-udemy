@@ -29,3 +29,23 @@ export interface IProject {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ITask {
+  _id : string;
+  name: string;
+  description: string;
+  status: string;
+  priority: string;
+  type: string;
+  assigne: string;
+  referenceFiles: {
+    type : string;
+    name : string;
+    url : string;
+  }[];
+  createdBy: string;
+  project: string;
+
+  createdAt: string;
+  updatedAt: string;
+}

@@ -14,9 +14,15 @@ export const hasPermission = ({
     if (project.owner === user._id) return true;
 
     // get team members permissions
-    const teamMember = project.teamMembers.find(
-      (item) => item.member === user._id
-    );
+    const teamMember = project.teamMembers.find((item: any) => {
+      if (typeof item === "string") {
+        return item === user._id;
+      }
+      if (typeof item === "object") {
+        return item.member._id === user._id;
+      }
+      return false;
+    });
     if (teamMember?.permissions.includes(permission)) return true;
     return false;
   } catch (error) {
