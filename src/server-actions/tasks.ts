@@ -77,17 +77,35 @@ export const getTasksByProjectId = async ({
   assignee,
 }: {
   projectId: string;
-  status?: string;
-  priority?: string;
-  type?: string;
-  assignee?: string;
+  status?: string | null;
+  priority?: string | null;
+  type?: string | null;
+  assignee?: string | null;
 }) => {
   try {
-    let filtersObj = {
+    let filtersObj: any = {
       project: projectId,
     };
 
-    const tasks = await TaskModel.find(filtersObj).sort({ createdAt: -1 }).populate("assignee");
+    if (status) {
+      filtersObj = { ...filtersObj, status };
+    }
+
+    if (priority) {
+      filtersObj = { ...filtersObj, priority };
+    }
+
+    if (type) {
+      filtersObj = { ...filtersObj, type };
+    }
+
+    if (assignee) {
+      filtersObj = { ...filtersObj, assignee };
+    }
+
+    const tasks = await TaskModel.find(filtersObj)
+      .sort({ createdAt: -1 })
+      .populate("assignee");
     return {
       success: true,
       data: JSON.parse(JSON.stringify(tasks)),

@@ -1,13 +1,15 @@
 import { formatDateAndTime } from "@/helpers/date-time-formats";
 import { IProject, ITask } from "@/interfaces";
 import { deleteTaskById, getTasksByProjectId } from "@/server-actions/tasks";
-import { Button, message, Modal, Table } from "antd";
+import { Button, message, Modal, Table, Select } from "antd";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { Eye, Edit2, Trash2 } from "lucide-react";
 import { IUsersStore, usersStore } from "@/store/users-store";
 import { hasPermission } from "@/helpers/permissions";
 import { useRouter } from "next/navigation";
+import ViewTaskModal from "./view-task-modal";
+import { taskPrioritiesList, taskTypesList } from "@/constants";
 
 function ProjectTasksList({ project }: { project: IProject }) {
   const [tasks, setTasks] = React.useState([]);
@@ -16,13 +18,24 @@ function ProjectTasksList({ project }: { project: IProject }) {
   const [selectedTask = null, setSelectedTask] = React.useState<ITask | null>(
     null
   );
+  const [showViewTaskModal, setShowViewTaskModal] = React.useState(false);
   const [showDeleteTaskModal, setShowDeleteTaskModal] = React.useState(false);
+
+  const [assignee, setAssignee] = React.useState(null);
+  const [priority, setPriority] = React.useState(null);
+  const [type, setType] = React.useState(null);
+  const [status, setStatus] = React.useState(null);
+
   const router = useRouter();
   const fetchTasks = async () => {
     try {
       setLoading(true);
       const response = await getTasksByProjectId({
         projectId: project._id,
+        assignee,
+        priority,
+        type,
+        status,
       });
       if (response.data) {
         setTasks(response.data);
@@ -57,7 +70,7 @@ function ProjectTasksList({ project }: { project: IProject }) {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [assignee, priority, type, status]);
 
   const columns = [
     {
@@ -90,7 +103,13 @@ function ProjectTasksList({ project }: { project: IProject }) {
       title: "Actions",
       render: (record: any) => (
         <div className="flex gap-5">
-          <Button size="small">
+          <Button
+            size="small"
+            onClick={() => {
+              setSelectedTask(record);
+              setShowViewTaskModal(true);
+            }}
+          >
             <Eye size={14} />
           </Button>
           {hasPermission({
@@ -129,10 +148,74 @@ function ProjectTasksList({ project }: { project: IProject }) {
     },
   ];
 
+  let assigneeOptions = [{ label: "All", value: null }];
+  project.teamMembers.forEach((item: any) => {
+    assigneeOptions.push({
+      label: item.member.name,
+      value: item.member._id,
+    });
+  });
+
+  let statusOptions: any[] = [{ label: "All", value: null }];
+  project.taskStatuses.forEach((item: string) => {
+    statusOptions.push({
+      label: item.toUpperCase(),
+      value: item,
+    });
+  });
+
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <h1 className="text-sm">Filters (Todo)</h1>
+      <div className="flex justify-between items-end gap-5">
+        <div className="grid grid-cols-4 w-full gap-5">
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="assignee" className="text-sm text-gray-700">
+              Assignee
+            </label>
+            <Select
+              options={assigneeOptions}
+              className="w-full"
+              value={assignee}
+              onChange={(value) => setAssignee(value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="priority" className="text-sm text-gray-700">
+              Priority
+            </label>
+            <Select
+              options={[{ label: "All", value: null }, ...taskPrioritiesList]}
+              className="w-full"
+              value={priority}
+              onChange={(value) => setPriority(value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="type" className="text-sm text-gray-700">
+              Task Type
+            </label>
+            <Select
+              options={[{ label: "All", value: null }, ...taskTypesList]}
+              className="w-full"
+              value={type}
+              onChange={(value) => setType(value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="type" className="text-sm text-gray-700">
+              Status
+            </label>
+            <Select
+              options={statusOptions}
+              className="w-full"
+              value={status}
+              onChange={(value) => setStatus(value)}
+            />
+          </div>
+        </div>
         <Button type="primary">
           <Link
             href={`/account/projects/${project._id}/create-task?projectName=${project.name}`}
@@ -159,6 +242,12 @@ function ProjectTasksList({ project }: { project: IProject }) {
           </h1>
           <p>Are you sure you want to delete this task?</p>
         </Modal>
+      )}
+
+      {showViewTaskModal && selectedTask && (
+        <ViewTaskModal
+          {...{ selectedTask, showViewTaskModal, setShowViewTaskModal }}
+        />
       )}
     </div>
   );

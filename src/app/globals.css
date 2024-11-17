@@ -44,7 +44,6 @@ table {
   border: 1px solid #b1b1b1;
 }
 
-
 .ant-upload-select {
   padding: 20px !important;
   border: 1px dashed #383737 !important;
@@ -52,7 +51,17 @@ table {
   margin-bottom: 10px !important;
 }
 
-.ant-upload-list-item{
-   border: 1px solid #828282 !important;
-   padding: 20px !important;
+.ant-upload-list-item {
+  border: 1px solid #828282 !important;
+  padding: 20px !important;
+}
+
+.rsw-ce ul {
+  list-style: disc;
+  padding-left: 2em;
+}
+
+.rsw-ce ol {
+  list-style: decimal;
+  padding-left: 2em;
 }
