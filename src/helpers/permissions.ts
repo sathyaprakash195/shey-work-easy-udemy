@@ -13,6 +13,10 @@ export const hasPermission = ({
     // if user is owner of the project , return true
     if (project.owner === user._id) return true;
 
+    if(typeof project.owner === "object") {
+      if (project.owner._id === user._id) return true;
+    }
+
     // get team members permissions
     const teamMember = project.teamMembers.find((item: any) => {
       if (typeof item === "string") {

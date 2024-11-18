@@ -24,7 +24,7 @@ export interface IProject {
     role: string;
     permissions: string[];
   }[];
-  owner: string;
+  owner: string | IUser;
 
   createdAt: string;
   updatedAt: string;

@@ -64,7 +64,7 @@ export const getProjectById = async (projectId: string) => {
   try {
     const response = await ProjectModel.findById(projectId).populate(
       "teamMembers.member"
-    );
+    ).populate("owner");
     return {
       success: true,
       message: "Project found successfully",
